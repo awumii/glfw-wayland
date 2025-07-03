@@ -6,7 +6,7 @@ Patches taken from https://github.com/BoyOrigin/glfw-wayland, but updated with p
 ## Minecraft
 For use with Minecraft on versions 1.21.x, use https://github.com/awumii/minecraft-wayland-icon-fix.   
 Older versions should work out of the box.
-> ⚠️ Don't forget to set a native library override. Use `-Dorg.lwjgl.glfw.libname=/path/to/libglfw.so.3.4` OR use **PrismLauncher** for easy checkbox.  
+> ⚠️ Don't forget to set a native library override. Use `-Dorg.lwjgl.glfw.libname=/path/to/libglfw.so.3.5` OR use **PrismLauncher** for easy checkbox.  
 
 ![launcher](.github/native.png)
 ## Installation (Arch Linux)

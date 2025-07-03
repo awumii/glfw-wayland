@@ -1,0 +1,34 @@
+From 922eef49cd551752e48b48de195a771a330d60f3 Mon Sep 17 00:00:00 2001
+From: awumii <awumii@protonmail.com>
+Date: Thu, 3 Jul 2025 07:20:03 +0200
+Subject: [PATCH] Fix crash on WindowPos
+
+---
+ src/wl_window.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/wl_window.c b/src/wl_window.c
+index 72c1a402..510e6337 100644
+--- a/src/wl_window.c
++++ b/src/wl_window.c
+@@ -2244,7 +2244,7 @@ void _glfwGetWindowPosWayland(_GLFWwindow* window, int* xpos, int* ypos)
+     // A Wayland client is not aware of its position, so just warn and leave it
+     // as (0, 0)
+ 
+-    _glfwInputError(GLFW_FEATURE_UNAVAILABLE,
++    fprintf(stderr,
+                     "Wayland: The platform does not provide the window position");
+ }
+ 
+@@ -2252,7 +2252,7 @@ void _glfwSetWindowPosWayland(_GLFWwindow* window, int xpos, int ypos)
+ {
+     // A Wayland client can not set its position, so just warn
+ 
+-    _glfwInputError(GLFW_FEATURE_UNAVAILABLE,
++    fprintf(stderr,
+                     "Wayland: The platform does not support setting the window position");
+ }
+ 
+-- 
+2.50.0
+
