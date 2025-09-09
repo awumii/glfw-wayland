@@ -6,7 +6,7 @@
 
 _pkgbase=glfw
 pkgname=glfw-wayland-git
-pkgver=3.4.r23.ge7ea71be
+pkgver=3.4.r53.g8e15281d
 pkgrel=1
 pkgdesc="Free, open source, portable framework for OpenGL application development (git version)"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -26,20 +26,18 @@ optdepends=('libgl: for OpenGL support'
 source=(
 "$_pkgbase::git+https://github.com/glfw/glfw"
 "0001-Key-Modifiers-Fix.patch"
-"0002-Fix-duplicate-pointer-scroll-events.patch"
-"0003-Implement-glfwSetCursorPosWayland.patch"
-"0004-Fix-Window-size-on-unset-fullscreen.patch"
+"0002-Implement-glfwSetCursorPosWayland.patch"
+"0003-Fix-Window-size-on-unset-fullscreen.patch"
+"0004-Fix-crash-on-WindowPos.patch"
 "0005-Implement-glfwSetWindowIcon.patch"
-"0006-Fix-crash-on-WindowPos.patch"
 )
 sha256sums=(
 'SKIP'
-'80520e329637397a9d14deb2f68219e96b207380100cef172be4ad757812c04a'
-'f96a16af2f9288db034c4cc2d2dc362f889f3b45b7529de6f61927e14a15c467'
-'e7b615a4acc5cd9a4e1182c3fc79a566ac0f4c8862f22a951b88d7ae4f200dd6'
-'e840ca8529157452e1c574d8e0f4e9eae37e8c0c5d1080312dc6dba58a28ee57'
-'671629a0263e3922707e3641ac65ac320445ecdc3535843a3ba4eaecfd8bcb54'
-'9d857addab03f3f1815051386f30e557f4e5e992cb8082f4d816bc3d696d16e7'
+'SKIP'
+'SKIP'
+'SKIP'
+'SKIP'
+'SKIP'
 )
 
 pkgver() {
@@ -50,12 +48,20 @@ pkgver() {
 prepare() {
   cd glfw
 
+  echo "Applying patch 0001..."
   git apply -3 ../0001-Key-Modifiers-Fix.patch
-  git apply -3 ../0002-Fix-duplicate-pointer-scroll-events.patch
-  git apply -3 ../0003-Implement-glfwSetCursorPosWayland.patch
-  git apply -3 ../0004-Fix-Window-size-on-unset-fullscreen.patch
+
+  echo "Applying patch 0002..."
+  git apply -3 ../0002-Implement-glfwSetCursorPosWayland.patch
+
+  echo "Applying patch 0003..."
+  git apply -3 ../0003-Fix-Window-size-on-unset-fullscreen.patch
+
+  echo "Applying patch 0004..."
+  git apply -3 ../0004-Fix-crash-on-WindowPos.patch
+
+  echo "Applying patch 0005..."
   git apply -3 ../0005-Implement-glfwSetWindowIcon.patch
-  git apply -3 ../0006-Fix-crash-on-WindowPos.patch
 }
 
 

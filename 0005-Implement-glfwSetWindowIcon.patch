@@ -232,7 +232,7 @@ index 79b0628849..1dd1cda85a 100644
   *
   *  [bundle-guide]: https://developer.apple.com/library/mac/documentation/CoreFoundation/Conceptual/CFBundles/
   *
-- *  @remark @wayland There is no existing protocol to change an icon, the
+- *  @remark __Wayland:__ There is no existing protocol to change an icon, the
 - *  window will thus inherit the one defined in the application's desktop file.
 - *  This function will emit @ref GLFW_FEATURE_UNAVAILABLE.
 + *  @remark @wayland This only works on compositors implementing the XDG toplevel icon protocol.
