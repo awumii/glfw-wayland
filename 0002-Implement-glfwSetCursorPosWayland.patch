@@ -1,18 +1,21 @@
-From 2307384a83ab87ba454458db0579f0ca318151f8 Mon Sep 17 00:00:00 2001
-From: Friz64 <friz64@protonmail.com>
-Date: Sun, 25 Feb 2024 00:51:49 +0100
+From cc8f9f48bc4fa7c79b06154567f5cfb841741f66 Mon Sep 17 00:00:00 2001
+From: awumii <awumii@protonmail.com>
+Date: Tue, 9 Sep 2025 21:41:36 +0200
 Subject: [PATCH] Wayland: Partially implement `glfwSetCursorPos`
+
+Patch created by Friz64, modified to fix cursor visibility bug, original PR can be found at
+https://github.com/glfw/glfw/pull/2496
 
 ---
  src/wl_platform.h |  2 ++
- src/wl_window.c   | 37 +++++++++++++++++++++++++++++++++++--
- 2 files changed, 37 insertions(+), 2 deletions(-)
+ src/wl_window.c   | 39 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 39 insertions(+), 2 deletions(-)
 
 diff --git a/src/wl_platform.h b/src/wl_platform.h
-index 149cd241bc..53b09eef10 100644
+index c3e45693..d8439fed 100644
 --- a/src/wl_platform.h
 +++ b/src/wl_platform.h
-@@ -371,6 +371,7 @@ typedef struct _GLFWwindowWayland
+@@ -372,6 +372,7 @@ typedef struct _GLFWwindowWayland
          GLFWbool                iconified;
          GLFWbool                activated;
          GLFWbool                fullscreen;
@@ -20,7 +23,7 @@ index 149cd241bc..53b09eef10 100644
      } pending;
  
      struct {
-@@ -386,6 +387,7 @@ typedef struct _GLFWwindowWayland
+@@ -387,6 +388,7 @@ typedef struct _GLFWwindowWayland
  
      _GLFWcursor*                currentCursor;
      double                      cursorPosX, cursorPosY;
@@ -29,10 +32,10 @@ index 149cd241bc..53b09eef10 100644
      char*                       appId;
  
 diff --git a/src/wl_window.c b/src/wl_window.c
-index 5b491ffbbd..4283f88fd5 100644
+index 4220d17e..36ab35fc 100644
 --- a/src/wl_window.c
 +++ b/src/wl_window.c
-@@ -2667,8 +2667,34 @@ void _glfwGetCursorPosWayland(_GLFWwindow* window, double* xpos, double* ypos)
+@@ -2721,8 +2721,36 @@ void _glfwGetCursorPosWayland(_GLFWwindow* window, double* xpos, double* ypos)
  
  void _glfwSetCursorPosWayland(_GLFWwindow* window, double x, double y)
  {
@@ -50,12 +53,6 @@ index 5b491ffbbd..4283f88fd5 100644
 +                                                       wl_fixed_from_double(x),
 +                                                       wl_fixed_from_double(y));
 +    } else {
-+        if (window->cursorMode != GLFW_CURSOR_DISABLED) {
-+            _glfwInputError(GLFW_PLATFORM_ERROR,
-+                            "Wayland: Delaying the cursor position update until "
-+                            "the cursor mode is set to GLFW_CURSOR_DISABLED");
-+        }
-+
 +        // The cursor is not currently locked, but it may be locked later. Either
 +        // - the application has already set the cursor mode to GLFW_CURSOR_DISABLED,
 +        //   but the cursor is currently outside of the window, or
@@ -65,11 +62,19 @@ index 5b491ffbbd..4283f88fd5 100644
 +        window->wl.pending.cursorPosX = x;
 +        window->wl.pending.cursorPosY = y;
 +        window->wl.pendingCursorPos = GLFW_TRUE;
++
++        if (window->wl.lockedPointer)
++        {
++            zwp_locked_pointer_v1_set_cursor_position_hint(window->wl.lockedPointer,
++                                                           wl_fixed_from_double(x),
++                                                           wl_fixed_from_double(y));
++            window->wl.pendingCursorPos = GLFW_FALSE;
++        }
 +    }
  }
  
  void _glfwSetCursorModeWayland(_GLFWwindow* window, int mode)
-@@ -3009,6 +3035,13 @@ void _glfwSetCursorWayland(_GLFWwindow* window, _GLFWcursor* cursor)
+@@ -3063,6 +3091,13 @@ void _glfwSetCursorWayland(_GLFWwindow* window, _GLFWcursor* cursor)
              unconfinePointer(window);
          if (!window->wl.lockedPointer)
              lockPointer(window);
@@ -83,3 +88,6 @@ index 5b491ffbbd..4283f88fd5 100644
      }
      else if (window->cursorMode == GLFW_CURSOR_CAPTURED)
      {
+-- 
+2.51.0
+
