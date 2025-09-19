@@ -1,0 +1,27 @@
+name: Patch and compile
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+            sudo apt update
+            sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev libwayland-dev libxkbcommon-dev
+      
+      - name: Clone, patch and compile GLFW
+        run: ./patch.sh
+        
+      - name: Upload a Build Artifact        
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: "glfw-wayland"
+          path: "glfw/build/src/libglfw.so.*"
