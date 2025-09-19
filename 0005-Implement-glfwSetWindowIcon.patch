@@ -331,7 +331,7 @@ index 72c1a40260..0fa20bb2bb 100644
 -                    "Wayland: The platform does not support setting the window icon");
 +    if (!_glfw.wl.toplevelIconManager)
 +    {   
-+        _glfwInputError(GLFW_FEATURE_UNAVAILABLE,
++        fprintf(stderr,
 +                        "Wayland: The platform does not support setting the window icon");
 +        return;
 +    }
