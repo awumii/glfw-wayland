@@ -1,0 +1,25 @@
+From b744ef791410421bf5ac2d7e9a946c8b3055b10f Mon Sep 17 00:00:00 2001
+From: awumii <awumii@protonmail.com>
+Date: Sun, 21 Sep 2025 13:12:36 +0200
+Subject: [PATCH] Allow non-main thread
+
+---
+ src/plugins/gtk/libdecor-gtk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/plugins/gtk/libdecor-gtk.c b/src/plugins/gtk/libdecor-gtk.c
+index bc5b0fa..dc7253c 100644
+--- a/src/plugins/gtk/libdecor-gtk.c
++++ b/src/plugins/gtk/libdecor-gtk.c
+@@ -2951,7 +2951,7 @@ libdecor_plugin_new(struct libdecor *context)
+ #ifdef HAVE_GETTID
+ 	/* Only support running on the main thread. */
+ 	if (getpid () != gettid ())
+-		return NULL;
++		fprintf(stderr, "libdecor-gtk-WARNING: Not running on the main thread! getpid=%d, gettid=%d\n", getpid(), gettid());
+ #endif
+ 
+ 	plugin_gtk = zalloc(sizeof *plugin_gtk);
+-- 
+2.51.0
+
