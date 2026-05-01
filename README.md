@@ -1,3 +1,5 @@
+# ⚠️ Outdated, use this instead ⚠️
+https://github.com/jdkeke142/glfw-wayland-minecraft
 # glfw-wayland
 A collection of not-yet-upstreamed GLFW Wayland patches. Mostly focues on improving the Minecraft experience.
 
